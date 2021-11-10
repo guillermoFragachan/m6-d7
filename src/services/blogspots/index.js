@@ -1,4 +1,5 @@
 import express from "express";
+import q2m from "query-to-mongo"
 
 import blogpostSchema from "./shema.js";
 
@@ -16,8 +17,18 @@ router.post("/", async (req, res, next) => {
   })
 
 router.get("/", async(req, res) => {
-    const blogs = await blogpostSchema.find()
-    res.send(blogs)
+    // const blogs = await blogpostSchema.find()
+
+    const mongoQuery = q2m(req.query)
+    console.log(mongoQuery)
+    const total = await blogpostSchema.countDocuments(mongoQuery.criteria)
+    const blogs = await blogpostSchema.find(mongoQuery.criteria)
+      .limit(mongoQuery.options.limit)
+      .skip(mongoQuery.options.skip)
+
+
+
+    res.send({ links: mongoQuery.links("/blogspot", total), pageTotal: Math.ceil(total / mongoQuery.options.limit), total, blogs })
 })
 
 
@@ -85,7 +96,8 @@ router.delete("/:id/comments/:commentId", async(req, res, next) => {
         const updateBlogspot = await blogpostSchema.findByIdAndUpdate(
             req.params.id, 
             { $pull: { comments: { _id: req.params.commentId } } }, 
-            { new: true } 
+            { new: true } //what was it this for?
+
             )
     
             res.send(updateBlogspot)
@@ -98,5 +110,9 @@ router.get("/:id/comments/:commentId", async(req, res, next) => {
         const comment = blog.comments.id(req.params.commentId)
         res.send(comment)
 })
+
+
+
+
 
 export default router
