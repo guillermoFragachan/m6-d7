@@ -8,7 +8,13 @@ const blogpostSchema = new Schema(
       category: { type: String, required: true },
       title: { type: String, required: true },
       cover: { type: String, required: true },
-        content: { type: String, required: true }
+        content: { type: String, required: true },
+        comments: [
+          {
+            author: { type: String, required: true },
+            content: { type: String, required: true }
+          }
+        ],
     },
     {
       timestamps: true,
