@@ -9,6 +9,8 @@ const blogpostSchema = new Schema(
       title: { type: String, required: true },
       cover: { type: String, required: true },
         content: { type: String, required: true },
+        authors: { type: Schema.Types.ObjectId, ref: "Authors" },
+        
         comments: [
           {
             author: { type: String, required: true },

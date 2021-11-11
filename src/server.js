@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 import cors from "cors"
 
 import blogspotRouter from "./services/blogspots/index.js"
+import authorsRouter from "./services/authors/index.js"
 
 
 const server = express()
@@ -13,6 +14,8 @@ server.use(express.json())
 
 const port = 3001
 
+
+server.use("/author", authorsRouter)
 server.use("/blogspot", blogspotRouter)
 
 

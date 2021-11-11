@@ -2,17 +2,28 @@ import express from "express";
 import q2m from "query-to-mongo"
 
 import blogpostSchema from "./shema.js";
-
+import authorsModel from "../authors/schema.js";
 
 
 const router = express.Router();
 
 
 router.post("/", async (req, res, next) => {
-    
-      const newBlog = new blogpostSchema(req.body) 
-      const { _id } = await newBlog.save() 
-      res.status(201).send({ _id })
+
+
+      // const author = await authorsModel.findById(req.body.author)
+      // console.log(author)
+
+
+      const newBlog = new blogpostSchema(req.body,
+      ) 
+
+
+      const { _id, authors } = await newBlog.save() 
+      res.status(201).send({ _id, authors })
+
+       //proide authoer with ID findALL by id 
+
     
   })
 
@@ -20,12 +31,12 @@ router.get("/", async(req, res) => {
     // const blogs = await blogpostSchema.find()
 
     const mongoQuery = q2m(req.query)
-    console.log(mongoQuery)
+    console.log(mongoQuery, "dsadasd")
     const total = await blogpostSchema.countDocuments(mongoQuery.criteria)
     const blogs = await blogpostSchema.find(mongoQuery.criteria)
       .limit(mongoQuery.options.limit)
       .skip(mongoQuery.options.skip)
-
+      .populate({path:"authors"})
 
 
     res.send({ links: mongoQuery.links("/blogspot", total), pageTotal: Math.ceil(total / mongoQuery.options.limit), total, blogs })
@@ -70,6 +81,7 @@ router.post("/:id/comments", async(req, res, next) => {
         { new: true } 
         )
 
+
         res.send(updateBlogspot)
 })
 
@@ -110,6 +122,7 @@ router.get("/:id/comments/:commentId", async(req, res, next) => {
         const comment = blog.comments.id(req.params.commentId)
         res.send(comment)
 })
+
 
 
 
