@@ -73,13 +73,18 @@ router.get("/me/stories", basicAuthMiddleware, async (req, res, next) => {
 })
 //ENDPOINT WITH USER AUTHENTICATION
 
-router.put("/me/:id", async(req, res) => {
-  const blog = await blogpostSchema.findByIdAndUpdate(req.params.id, req.body, {new: true})
-  res.send(blog)
+router.put("/me/:id", basicAuthMiddleware, async(req, res) => {
+
+  const userBlogs = await blogpostSchema.findOneAndUpdate({ authors: req.user._id }, req.body, { new: true })
+
+  
+    res.send(userBlogs)
+  
+  
 })
 
-router.delete("/me/:id", async(req, res) => {
-  const blog = await blogpostSchema.findByIdAndDelete(req.params.id)
+router.delete("/me/:id", basicAuthMiddleware,  async(req, res) => {
+  const blog = await blogpostSchema.findOneAndDelete({ authors: req.user._id }, req.body)
   res.send(blog)
 })
 //ENDPOINT WITHOUT USER AUTHENTICATION
