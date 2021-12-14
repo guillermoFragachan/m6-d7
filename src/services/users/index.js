@@ -31,7 +31,7 @@ usersRouter.post("/", async (req, res, next) => {
 
 */
 //GET USER LIST
-usersRouter.get("/", basicAuthMiddleware, async (req, res, next) => {
+usersRouter.get("/", async (req, res, next) => {
   try {
     const users = await UserModel.find()
     res.send(users)
@@ -72,7 +72,8 @@ usersRouter.get("/:id", basicAuthMiddleware, async (req, res, next) => {
 usersRouter.put("/me", basicAuthMiddleware, async (req, res, next) => {
   try {
     // req.user.name = "John"
-    console.log(req.user)
+    req.user.name = req.body.name
+    // console.log(req.user)
     await req.user.save()
     res.send()
   } catch (error) {

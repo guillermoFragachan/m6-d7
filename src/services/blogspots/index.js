@@ -76,8 +76,8 @@ router.get("/me/stories", basicAuthMiddleware, async (req, res, next) => {
 router.put("/me/:id", basicAuthMiddleware, async(req, res) => {
 
   const userBlogs = await blogpostSchema.findOneAndUpdate({ authors: req.user._id }, req.body, { new: true })
-
-  
+  console.log(userBlogs)
+  await userBlogs.save()
     res.send(userBlogs)
   
   
@@ -97,6 +97,7 @@ router.get("/:id", async(req, res) => {
 
 router.put("/:id", async(req, res) => {
     const blog = await blogpostSchema.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    await blog.save()
     res.send(blog)
 })
 
