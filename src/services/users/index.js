@@ -5,6 +5,8 @@ import { adminOnlyMiddleware } from "../../auth/admin.js"
 
 const usersRouter = express.Router()
 
+
+//CREATE USER
 usersRouter.post("/", async (req, res, next) => {
   try {
     const newUser = new UserModel(req.body)
@@ -15,6 +17,20 @@ usersRouter.post("/", async (req, res, next) => {
   }
 })
 
+/*
+
+
+{
+  "name": "guilermo",
+  "surname": "fragachan",
+  "email":"guill@frag.com",
+  "password": "1111",
+  "role": "Admin"
+}
+
+
+*/
+//GET USER LIST
 usersRouter.get("/", basicAuthMiddleware, async (req, res, next) => {
   try {
     const users = await UserModel.find()
@@ -24,6 +40,7 @@ usersRouter.get("/", basicAuthMiddleware, async (req, res, next) => {
   }
 })
 
+//GET SIGNED USER
 usersRouter.get("/me", basicAuthMiddleware, async (req, res, next) => {
   try {
     res.send(req.user)
@@ -32,6 +49,15 @@ usersRouter.get("/me", basicAuthMiddleware, async (req, res, next) => {
   }
 })
 
+// usersRouter.get("/me/stories", basicAuthMiddleware, async (req, res, next) => {
+//     try {
+//         const user = await UserModel.findById(req.params.id)
+//         res.send(user)
+//     } catch (error) {
+//         next(error)
+//     }
+// })
+//GET USER BY ID
 usersRouter.get("/:id", basicAuthMiddleware, async (req, res, next) => {
   try {
     const user = await UserModel.findById(req.params.id)
@@ -41,9 +67,12 @@ usersRouter.get("/:id", basicAuthMiddleware, async (req, res, next) => {
   }
 })
 
+
+//modify user 
 usersRouter.put("/me", basicAuthMiddleware, async (req, res, next) => {
   try {
-    req.user.name = "John"
+    // req.user.name = "John"
+    console.log(req.user)
     await req.user.save()
     res.send()
   } catch (error) {

@@ -3,6 +3,8 @@ import q2m from "query-to-mongo"
 
 import blogpostSchema from "./shema.js";
 import authorsModel from "../authors/schema.js";
+import userModel from "../users/schema.js";
+import { basicAuthMiddleware } from "../../auth/basic.js";
 
 
 const router = express.Router();
@@ -26,6 +28,23 @@ router.post("/", async (req, res, next) => {
 
     
   })
+
+//route that creates a new blogpost with user authetication
+router.post("/me",basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const user = req.user
+      req.body.authors = user._id
+      console.log(user)
+      const newBlog = new blogpostSchema(req.body) 
+     
+    const { _id, authors } = await newBlog.save() 
+    res.status(201).send({ _id, authors })
+  } catch (error) {
+    next(error)
+  }  
+
+
+})
 
 router.get("/", async(req, res) => {
     // const blogs = await blogpostSchema.find()
