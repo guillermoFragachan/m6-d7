@@ -60,6 +60,17 @@ router.get("/", async(req, res) => {
 
     res.send({ links: mongoQuery.links("/blogspot", total), pageTotal: Math.ceil(total / mongoQuery.options.limit), total, blogs })
 })
+
+//ENPOINT STORIES
+router.get("/me/stories", basicAuthMiddleware, async (req, res, next) => {
+  try {
+    const user = req.user
+    const blogs = await blogpostSchema.find({ authors: user._id })
+    res.send(blogs)
+  } catch (error) {
+    next(error)
+  }
+})
 //ENDPOINT WITH USER AUTHENTICATION
 
 router.put("/me/:id", async(req, res) => {
