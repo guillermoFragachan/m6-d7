@@ -60,7 +60,18 @@ router.get("/", async(req, res) => {
 
     res.send({ links: mongoQuery.links("/blogspot", total), pageTotal: Math.ceil(total / mongoQuery.options.limit), total, blogs })
 })
+//ENDPOINT WITH USER AUTHENTICATION
 
+router.put("/me/:id", async(req, res) => {
+  const blog = await blogpostSchema.findByIdAndUpdate(req.params.id, req.body, {new: true})
+  res.send(blog)
+})
+
+router.delete("/me/:id", async(req, res) => {
+  const blog = await blogpostSchema.findByIdAndDelete(req.params.id)
+  res.send(blog)
+})
+//ENDPOINT WITHOUT USER AUTHENTICATION
 
 router.get("/:id", async(req, res) => {
     const blog = await blogpostSchema.findById(req.params.id)
