@@ -104,4 +104,25 @@ usersRouter.delete("/:id", basicAuthMiddleware, adminOnlyMiddleware, async (req,
   }
 })
 
+usersRouter.post("/login", async (req, res, next) => {
+  try {
+    // 1. Get credentials from req.body
+    const { email, password } = req.body
+
+    // 2. Verify credentials
+    const user = await UserModel.checkCredentials(email, password)
+
+    if (user) {
+      // 3. If credentials are fine we are going to generate an access token
+      const accessToken = await JWTAuthenticate(user)
+      res.send({ accessToken })
+    } else {
+      // 4. If they are not --> error (401)
+      next(createHttpError(401, "Credentials not ok!"))
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 export default usersRouter
