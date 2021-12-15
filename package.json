@@ -26,6 +26,7 @@
     "express": "^4.17.1",
     "express-list-endpoints": "^6.0.0",
     "mongoose": "^6.0.12",
+    "jsonwebtoken": "^8.5.1",
     "query-to-mongo": "^0.10.1"
   },
   "devDependencies": {
