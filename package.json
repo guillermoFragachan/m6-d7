@@ -27,6 +27,8 @@
     "express-list-endpoints": "^6.0.0",
     "mongoose": "^6.0.12",
     "jsonwebtoken": "^8.5.1",
+    "passport": "^0.5.1",
+    "passport-google-oauth20": "^2.0.0",
     "query-to-mongo": "^0.10.1"
   },
   "devDependencies": {
