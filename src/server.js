@@ -4,6 +4,8 @@ import mongoose from "mongoose"
 import cors from "cors"
 
 import usersRouter from "./services/users/index.js"
+import passport from "passport"
+import googleCloudStrategy from "./auth/oauth.js"
 
 import blogspotRouter from "./services/blogspots/index.js"
 import authorsRouter from "./services/authors/index.js"
@@ -16,6 +18,10 @@ const server = express()
 
 server.use(cors())
 server.use(express.json())
+passport.use("google", googleCloudStrategy)
+
+server.use(passport.initialize())
+
 
 const port = 3001
 
