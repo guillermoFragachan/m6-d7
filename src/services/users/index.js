@@ -17,8 +17,17 @@ usersRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profi
 usersRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
   // This endpoint URL needs to match EXACTLY to the one configured on google.cloud dashboard
   try {
-    // Thanks to passport.serialize we are going to receive the tokens in the request
-    console.log("TOKENS: ", req.user.tokens)
+    res.cookie("accessToken", req.user.tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      sameSite: "lax", // same site cannot be set to none if secure option is enabled
+    })
+    // res.cookie("refreshToken", req.user.tokens.refreshToken, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production" ? true : false,
+    //   sameSite: "lax", // same site cannot be set to none if secure option is enabled
+    // })
+    console.log("access",req.user)
 
     res.redirect(`${process.env.FE_URL}?accessToken=${req.user.tokens.accessToken}&refreshToken=${req.user.tokens.refreshToken}`)
   } catch (error) {
